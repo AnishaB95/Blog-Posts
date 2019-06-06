@@ -1,0 +1,98 @@
+title: "Exploratory Data Analysis: Variation in the Distribution of Wine Varieties"
+author: "Anisha BharathSingh"
+date: "6/2/2019"
+output: word_document
+
+
+## Install and load packages
+```{r, install, load tidyverse}
+install.packages("tidyverse") #install tidyverse package
+library(tidyverse) #load tidyverse package
+```
+## Reading in the Data File
+```{r, read csv, variables names }
+WineReviewData <- read_csv("winemag-data_first150k.csv") #assign data to "WineReviewData"
+head(WineReviewData) #preview data
+```
+
+## Assign consistent column names
+```{r, rename}
+colnames(WineReviewData) <- c("Country", "Description", "Designation", "Points", "Price", "Province", "Region_1", "Region_2", "Variety", "Winery")
+colnames(WineReviewData) #print data frame variable names
+```
+
+## Create df for the top 15 wine varieties
+```{r, top 15 varieties}
+WineReviewDataVar  <- WineReviewData %>% #create new df with the count of wine varieties
+  group_by(Variety) %>% 
+  count() #take the count of data
+  
+WineReviewData_Top15Var <- WineReviewDataVar %>% #create new df with the top 15 common wine varieties
+  arrange(desc(n)) %>% #arrange count in descending order
+  head(15) #display the first 15 rows
+
+WineReviewData_Top15Var #print to check new df
+```
+
+## Plot bar chart of top 15 wine varieties
+```{r, top 15 bar chart}
+ggplot(WineReviewData_Top15Var, aes(x = reorder(Variety, -n), y = n)) + #select df and reorder counts from highest to lowest
+  geom_bar(stat = "identity") + #plot bar chart
+  ggtitle("Top 15 Common Wine Varieties") + #add title
+  labs(y = "Count", x = "Wine Varieties") + # set y and x-axis names 
+  theme(axis.text.x  = element_text(angle=60, vjust=0.5, size=8)) + #angle x labels
+  theme(axis.title.y = element_text(size=10)) #set size for y-axis name
+```
+
+## Create df and Plot Chardonnay Prices
+```{r, create df for Chardonnays}
+chardonnay <- filter(WineReviewData, Variety == "Chardonnay")
+```
+```{r, plot histogram of Chardonnay Prices}
+ggplot(data = chardonnay) + #select df
+  geom_histogram(mapping = aes(x = Price), binwidth = 5) +  #plot histogram
+  ggtitle("Chardonnay Prices") + #add title
+  labs(y = "Count", x = "Price") # set y and x-axis names 
+```
+
+## Set ylim to 25
+```{r, ylim set to 25}
+ggplot(data = chardonnay) +  #select df
+  geom_histogram(mapping = aes(x = Price), binwidth = 5) +  #plot histogram
+  ggtitle("Chardonnay Prices with ylim set to 25") + #add title
+  labs(y = "Count", x = "Price") + #set y and x-axis names 
+  coord_cartesian(ylim = c(0, 25)) #set coordinates of the plot
+```
+
+## Find and plot typical values
+```{r, typical values}
+typical_values <- chardonnay %>% #create new df
+  group_by(Price) %>% #group by the price variable
+  filter(n() > 25) #filter for values above 25
+typical_values #print new df
+```
+```{r, typical values plot}
+ggplot(data = typical_values) + #select df
+  geom_histogram(mapping = aes(x = Price), binwidth = 5) + #plot histogram
+  ggtitle("Typical Chardonnay Prices") + #add title
+  labs(y = "Count", x = "Price") #set y and x-axis names 
+```
+
+## Find and plot unusual values
+```{r, unusual values}
+unusual_values <- chardonnay %>% #create new df
+  group_by(Price) %>% #group by the price variable
+  filter(n() <= 25) #filter for values below or equal to 25
+unusual_values #print new df
+```
+```{r, unusual_values plot}
+ggplot(data = unusual_values) + #select df
+  geom_histogram(mapping = aes(x = Price), binwidth = 1) + #plot histogram
+  ggtitle("Unusual Chardonnay Prices") + #add title
+  labs(y = "Count", x = "Price") #set y and x-axis names 
+```
+
+## Find Chardonnay above $2,000
+```{r, $2,000+ Chardonnay}
+(filter(chardonnay, Price > 2000)) #filter for 
+```
