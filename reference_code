@@ -94,5 +94,5 @@ ggplot(data = unusual_values) + #select df
 
 ## Find Chardonnay above $2,000
 ```{r, $2,000+ Chardonnay}
-(filter(chardonnay, Price > 2000)) #filter for 
+(filter(chardonnay, Price > 2000)) #filter for prices above $2,000
 ```
