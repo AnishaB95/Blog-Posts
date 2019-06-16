@@ -1,0 +1,100 @@
+---
+title: "Covariation-ContinuousVariables"
+author: "Anisha BharathSingh"
+date: "6/13/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install and load tidyverse
+```{r, install, load tidyvers}
+install.packages("tidyverse") 
+library(tidyverse)
+install.packages("ggrepel")
+library(ggrepel)
+```
+
+## Read CSV
+```{r, read csv, variables names }
+WorldHappinessData <- read_csv("HappinessData.csv") 
+head(WorldHappinessData) #preview data
+```
+## Rename Variables
+```{r, rename}
+colnames(WorldHappinessData) <- c("Country", "Year", "Ladder", "Log_of_GDP_per_capita", "Social_support", "Health_life_expectancy", "Freedom", "Generosity", "Corruption", "Positive_affect", "Negative_affect")
+colnames(WorldHappinessData) #print data frame variable names
+```
+
+## Create 2017 Data Frame
+```{r}
+WorldHappinessData2017 <- filter(WorldHappinessData, Year == "2017") #filter data set to only include observations where Year = 2017
+```
+
+
+## Scatterplot of Freedom and Positive Emotion
+```{r}
+  ggplot(data = WorldHappinessData2017, mapping = aes(x= Freedom, y= Positive_affect)) +
+  geom_point() + #scatteplot
+  geom_smooth() + #line plot
+  ggtitle("Freedom vs. Positive Emotion 2017") + 
+  labs(y = "Positive Emotion")
+```  
+
+## Create Happiest Countries Data Frame
+```{r}
+HappyCountries <- filter(WorldHappinessData2017, Positive_affect > 0.8) #filter data set to only include observations where positive affect is greater than 0.8
+```
+
+## Scatterplot of Top Positive Emotions Countries with Labels
+```{r}
+  ggplot(HappyCountries, aes(x= Freedom, y= Positive_affect, label=Country))+
+  geom_point() +
+  geom_label_repel(aes(label = Country), #add data point labels
+                  box.padding   = 0.35, 
+                  point.padding = 0.5,
+                  segment.color = 'grey50') +
+  theme_classic() +
+  ggtitle("Freedom vs. Top Positive Countries in 2017") + 
+  labs(y = "Positive Emotion")
+```
+
+## ## Create Saddest Countries Data Frame
+```{r}
+SadCountries <- filter(WorldHappinessData2017, Positive_affect < 0.5) #filter data set to only include observations where positive affect is less than 0.5
+```
+
+## Scatterplot of Bottom Positive Emotions Countries with Labels
+```{r}
+  ggplot(SadCountries, aes(x= Freedom, y= Positive_affect, label=Country))+
+  geom_point() +
+  geom_label_repel(aes(label = Country), #add data point labels
+                  box.padding   = 0.35, 
+                  point.padding = 0.5,
+                  segment.color = 'grey50') +
+  theme_classic() +
+  ggtitle("Freedom vs. Bottom Positive Countries in 2017") + 
+  labs(y = "Positive Emotion")
+```
+
+
+## Create Bottom 3 Country Data Frame
+```{r}
+Bottom3Countries <- filter(WorldHappinessData, Country == "Tunisia" | Country == "Turkey" | Country == "Yemen" ) #create data frame that only hace data for the bottom 3 countries
+```
+
+## Create Facet Plot of Time Series Data for Freedom and Positive Emotion for the Bottom 3 Countries
+```{r}
+ggplot(data = Bottom3Countries) +
+  geom_smooth(mapping = aes(x= Year, y= Positive_affect)) +
+  geom_smooth(mapping = aes(x= Year, y= Freedom), color = "red") +
+  facet_grid(~Country) + #facet by country
+  ggtitle("Freedom and Positive Emotion for the Bottom Three Countries (2005-2017)") + 
+  labs(y = "Positive Emotion") +
+  theme(axis.text.x  = element_text(angle=60, vjust=0.5, size=8)) #angle x-axis labels
+  
+``` 
+
+
