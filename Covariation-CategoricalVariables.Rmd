@@ -1,0 +1,72 @@
+---
+title: "Covariation Between Two Categorical Variables"
+author: "Anisha BharathSingh"
+date: "6/10/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install and load tidyverse
+```{r, install, load tidyvers}
+#install.packages("tidyverse") 
+library(tidyverse) #load tidyverse package
+```
+
+## Read CSV
+```{r, read csv, variables names }
+MMData <- read_csv("MissingMigrantsProject.csv") 
+head(MMData) #preview data
+```
+
+## Find Top 10 Incident Regions (TOP10IR)
+```{r}
+Top10IR <- MMData %>%
+  group_by(incident_region) %>% 
+  count() %>% #take the count of data
+  arrange(desc(n)) %>% #arrange count in descending order
+  head(10) #displays the first 10 rows 
+  
+Top10IR
+```
+
+## Find Top 6 Causes of Death (TOP6COD)
+```{r}
+Top6COD <- MMData %>%
+  group_by(cause_of_death) %>% 
+  count() %>% #take the count of data
+  arrange(desc(n)) %>% #arrange count in descending order
+  head(6) #displays the first 10 rows 
+  
+Top6COD
+```
+
+## Create df with Top Incident Regions and Cause (TOPIRCOD)
+```{r}
+TopIRCOD <- filter(MMData, incident_region == "North Africa" | incident_region == "Mediterranean" | incident_region == "U.S./Mexico Border" | incident_region == "Central America incl. Mexico" | incident_region == "Horn of Africa" |  incident_region == "Europe" | incident_region == "Middle East" | incident_region == "Sub-Saharan Africa" | incident_region == "Southeast Asia" | incident_region == "Caribbean", cause_of_death == "Drowning" | cause_of_death == "Unknown (skeletal remains)" | cause_of_death == "Presumed drowning" | cause_of_death == "Sickness_and_lack_of_access_to_medicines" | cause_of_death == "Vehicle_Accident") 
+
+TopIRCOD
+```
+
+## geom_count() plot of TOP1RCOD
+```{r}
+ggplot(data = TopIRCOD) +
+  geom_count(mapping = aes(x = incident_region, y = cause_of_death)) + 
+  ggtitle("Incident Region and Cause of Death") + 
+  labs(x = "Incident Region", y = "Cause of Death") +
+  theme(axis.text.x  = element_text(angle=60, vjust=0.5, size=8)) +  #angle x-axis labels
+  scale_y_discrete(labels=c("Drowning", "Presumed Drowning", "Sickness/Inaccessible Medication", "Unknown (skeletal remains)", "Vehicle Accident")) # rename y-axis labels
+
+```
+
+
+
+
+
+
+
+
+
+
