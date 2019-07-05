@@ -1,0 +1,58 @@
+---
+title: "Exploratory Data Anaysis: Covariation of a Categorical and a Continuous Variable"
+author: "Anisha BharathSingh"
+date: "7/4/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load packages
+```{r}
+#install.packages("tidyverse") 
+library(tidyverse) #load tidyverse package
+```
+
+## Read in data file
+```{r}
+WineReviewData=read.csv("winemag-data_first150k.csv")
+head(WineReviewData)
+```
+
+## Find Top 10 Wine Varieties
+```{r}
+WineReviewDataVar  <- WineReviewData %>% #create new df with the count of wine varieties
+  group_by(variety) %>% 
+  count() %>% #take the count of data
+  arrange(desc(n)) %>% #arrange count in descending order
+  head(10) #displays the first 15 rows
+
+WineReviewDataVar
+```
+
+
+## New Data Frame for the Top 10 Varieties
+```{r}
+Top10Varieties <- filter(WineReviewData, variety == "Chardonnay" | variety == "Pinot Noir" | variety == "Cabernet Sauvignon" | variety == "Red Blend" | variety == "Bordeaux-style Red Blend" | variety == "Sauvignon Blanc" | variety == "Syrah" | variety == "Riesling" | variety == "Merlot" | variety == "Zinfadel")
+Top10Varieties
+```
+
+## Find Typical Values above 100 to Remove majority if outliers
+```{r}
+Typical_Values <- Top10Varieties %>%
+  group_by(price) %>%
+  filter(price < 100)
+Typical_Values
+```
+
+##Plot Boxplot
+```{r}
+ggplot(data = typical_values, mapping = aes(x = variety, y = price)) +
+  geom_boxplot() + 
+  ggtitle("Wine Prices by Variety") + 
+  labs(x = "Variety", y = "Price") + 
+  theme(axis.text.x  = element_text(angle=60, vjust=0.5, size=8)) + 
+  theme(axis.title.y = element_text(size=10))
+```
