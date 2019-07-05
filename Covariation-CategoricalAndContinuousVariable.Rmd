@@ -49,7 +49,7 @@ Typical_Values
 
 ##Plot Boxplot
 ```{r}
-ggplot(data = typical_values, mapping = aes(x = variety, y = price)) +
+ggplot(data = Typical_Values, mapping = aes(x = variety, y = price)) +
   geom_boxplot() + 
   ggtitle("Wine Prices by Variety") + 
   labs(x = "Variety", y = "Price") + 
