@@ -1,0 +1,58 @@
+---
+title: "ReadDatafromExcelTXTCSV"
+author: "Anisha BharathSingh"
+date: "7/8/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Read in Excel Files
+```{r}
+install.packages("readxl")
+library(readxl)
+t_data_excel <- read_excel("TitanicData.xlsx")
+head(t_data_excel)
+summary(t_data_excel)
+```
+
+# Read in TXT Files
+```{r}
+practice_txt = read.table("Practice.txt", header = TRUE)
+head(practice_txt)
+str(practice_txt)
+```
+
+# Read in CSV Files
+```{r}
+wine_reviews = read.csv("winemag-data_first150k.csv", header = TRUE)
+head(wine_reviews)
+str(wine_reviews)
+```
+
+## Read in CSV with Semicolons
+```{r}
+wine_quality = read.csv("winequality-red.csv", header = TRUE)
+head(wine_quality)
+summary(wine_quality)
+
+wine_quality_comma = read.csv("winequality-red.csv", header = TRUE, sep=",")
+head(wine_quality_comma)
+summary(wine_quality_comma)
+
+wine_quality_semicolon = read.table("winequality-red.csv", header = TRUE, sep=";")
+head(wine_quality_semicolon)
+summary(wine_quality_semicolon)
+```
+
+## Read in Online CSV
+```{r}
+install.packages("RCurl")
+library(RCurl)
+
+faculty_salaries = read.csv(text=getURL("http://courses.washington.edu/b517/Datasets/SalaryData.csv"))
+head(faculty_salaries)
+summary(faculty_salaries)
+```
