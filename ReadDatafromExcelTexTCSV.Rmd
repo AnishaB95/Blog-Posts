@@ -22,7 +22,7 @@ summary(t_data_excel)
 ```{r}
 practice_txt = read.table("Practice.txt", header = TRUE)
 head(practice_txt)
-str(practice_txt)
+summary(practice_txt)
 ```
 
 # Read in CSV Files
