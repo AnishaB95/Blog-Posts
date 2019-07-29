@@ -1,0 +1,66 @@
+---
+title: "Tibbles"
+author: "Anisha BharathSingh"
+date: "7/23/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install and load tidyverse
+```{r}
+#install.packages("tidyverse")
+#library(tidyverse)
+```
+
+## Create tibble from data frame
+```{r}
+#install.packages("readxl")
+#library(readxl)
+df <- read_excel("TitanicData.xlsx")
+(tb <- as_tibble(df))
+```
+
+## Create tibble x, y, z
+```{r, tibble x, y, z}
+xyz <- tibble(
+  x = 1:10,
+  y = 2,
+  z = x + y
+)
+```
+
+## Create tribble
+```{r, tribble}
+tribble(
+  ~x, ~y, ~z,
+  "d", 2, 4.2,
+  "e", 3, 5.6
+  )
+```
+
+## Subset column y from xyz using column name
+```{r, subsetting column name}
+## dollar sign notation
+xyz$y
+
+## brackets
+xyz[["y"]]
+
+```
+
+## Subset column y from xyz using position
+```{r, subsetting position}
+xyz[[2]]
+```
+
+## Subset column y from xyz using pipes
+```{r, subsetting using pipes}
+## dollar sign notation using column name
+xyz %>% .$y
+
+## brackets using position
+xyz %>% .[[2]]
+```
