@@ -24,7 +24,7 @@ head(SERP_812019) #preview first 6 rows of data frame
 
 ## Find Top 10 sites to rank in #1 using pipes
 ```{r}
-Top10Sites <- filter(SERP_812019, rank == 1) %>% #create new df with the count(n) of sites
+Top10Sites <- filter(SERP_812019, rank == 1) %>% #filter data set for rank #1
   group_by(displayLink) %>% #group data frame by displayLink column
   count() %>% #take the count of each data observation
   arrange(desc(n)) %>% #arrange count in descending order
