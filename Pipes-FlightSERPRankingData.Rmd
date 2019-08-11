@@ -1,0 +1,48 @@
+---
+title: "Pipes:FlightSERPRankingData"
+author: "Anisha BharathSingh"
+date: "8/10/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install and Load Packages
+```{r}
+#install.packages("tidyverse")
+library(tidyverse)
+```
+
+## Import Data into RStudio
+```{r}
+SERP_812019 <- read_csv("flights_tickets_serp2019-08-01.csv")
+head(SERP_812019) #preview first 6 rows of data frame
+```
+
+
+## Find Top 10 sites to rank in #1 using pipes
+```{r}
+Top10Sites <- filter(SERP_812019, rank == 1) %>% #create new df with the count(n) of sites
+  group_by(displayLink) %>% #group data frame by displayLink column
+  count() %>% #take the count of each data observation
+  arrange(desc(n)) %>% #arrange count in descending order
+  head(10) #displays the first 10 rows
+  
+Top10Sites  
+```
+
+## Bar Plot of Top 10 Travel sites ranking in position #1
+```{r}
+ggplot(Top10Sites, aes(x = reorder(displayLink, -n), y = n)) + 
+  geom_bar(stat = "identity") + 
+  ggtitle("Top 10 Websites Ranking in #1 for 'Flights/Tickets' Keywords on 8/1/19") + #add title
+  labs(y = "Count", x = "Website") + # set y and x-axis names 
+  theme(axis.text.x  = element_text(angle=60, vjust=0.5, size=8)) + #angle x labels
+  theme(axis.title.y = element_text(size=10)) #set size for y-axis name
+```
+
+
+
+
