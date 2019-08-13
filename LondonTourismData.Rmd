@@ -1,0 +1,82 @@
+---
+title: "LondonTourismData"
+author: "Anisha BharathSingh"
+date: "8/10/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install and Load Packages
+```{r}
+#install.packages("tidyverse")
+#install.packages("ggplot2")
+#install.packages("readxl")
+#library(readxl)
+#library(tidyverse)
+#library(ggplot2)
+```
+
+## Import data into RStudio
+```{r}
+london_data <- read_excel("international-visitors-london-raw.xlsx")
+head(london_data)
+```
+
+# Number of Internation Visits by Year
+```{r}
+ggplot(data = london_data) + geom_bar(mapping = aes(x = year)) +
+  ggtitle("Number of International Visits to London by Year") +
+  labs( y = "Number of Visits", x = "Year")
+```
+# 2018 data only
+```{r}
+london_2018 <- filter(london_data, year == 2018)
+```
+
+# Find top 20 countries
+```{r}
+london_2018_country_counts <- filter(london_data, year == 2018) %>%
+  group_by(market) %>%
+  count() %>%
+  arrange(desc(n)) %>%
+  head(20)
+
+
+(london_2018_country_counts)
+```
+
+# Create df with data for only the Top 20 Countries
+```{r}
+Top20Countries <- filter(london_2018, market == "France" | market == "USA" | market == "Germany" | market == "Netherlands" | market == "Australia" | market == "Canada" | market == "India" | market == "Spain" | market == "Belgium" | market == "Brazil" | market == "Irish Republic" | market == "China" | market == "Italy" | market == "United Arab Emirates" | market == "Japan" | market == "Hong Kong" | market == "Malaysia" | market == "Other Eastern Europe" | market == "Israel" | market == "Romania")
+Top20Countries
+```
+
+# Barplot of Travel Mode y Country
+```{r}
+ggplot(data = Top20Countries) + geom_bar(mapping = aes(x = market, fill = mode)) +  
+  ggtitle("Mode of Travel by Country") + 
+  labs(y = "Number of Visits", x = "Country", fill = "Mode") + 
+  theme(axis.text.x  = element_text(angle=60, vjust=0.5, size=8)) + #angle x labels
+  theme(axis.title.y = element_text(size=10))
+```
+
+# Barplot of Purpose by Country
+```{r}
+ggplot(data = Top20Countries) + geom_bar(mapping = aes(x = market, fill = purpose)) +   
+  ggtitle("Purpose of Visits by Country") + 
+  labs(y = "Number of Visits", x = "Country", fill = "Purpose") + 
+  theme(axis.text.x  = element_text(angle=60, vjust=0.5, size=8)) + #angle x labels
+  theme(axis.title.y = element_text(size=10))
+```
+
+# Barplot of Purpose and Duration Stay
+```{r}
+ggplot(data = Top20Countries) + geom_bar(mapping = aes(x = purpose, fill = dur_stay)) +   
+  ggtitle("Influence of Visit Purpose on Duration Stay") + 
+  labs(y = "Number of Visits", x = "Purpose", fill = "Duration") + 
+  theme(axis.text.x  = element_text(angle=60, vjust=0.5, size=8)) + 
+  theme(axis.title.y = element_text(size=10))
+```
