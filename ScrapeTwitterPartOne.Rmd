@@ -1,0 +1,74 @@
+---
+title: "ScrapingTextfromTwitter"
+author: "Anisha BharathSingh"
+date: "8/5/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install Packages
+```{r}
+install.packages("stringr")
+install.packages("twitteR")
+install.packages("purrr")
+install.packages("tidytext")
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("lubridate")
+install.packages("scales")
+install.packages("broom")
+install.packages("ggplot2")
+```
+
+##Load packages
+```{r}
+library(stringr)
+library(twitteR)
+library(purrr)
+library(tidytext)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(scales)
+library(broom)
+library(ggplot2)
+```
+
+## Access keys and tokens
+```{r}
+api_Key = "UpV34UlCER500Wt2L6moKzafQ"
+api_Secret = "dClASQhAk2JPl6vCa1Y84bcm38FF6Ol2vXrKnBA2jnaCUxHYRU"
+access_Token = "3289530502-HDTWQVZ5ygeBfkGge5uAF0ga9IFaH5eUjNlAVle"
+access_Token_Secret = "mib41B7t0Cot1ifOJDsAlwHtYZzZUNRpLyTC54UPsfnsO"
+```
+
+
+## Setup R and Twitter API Connection
+```{r}
+options(httr_oauth_cache=TRUE)
+setup_twitter_oauth(consumer_key = api_Key, consumer_secret = api_Secret,
+access_token = access_Token, access_secret = access_Token_Secret)
+```
+
+## Extract user tweets
+```{r}
+ParisJeTaime <- userTimeline("ParisJeTaime", n = 100)
+ParisJeTaime_df <- tbl_df(map_df(ParisJeTaime, as.data.frame))
+head(ParisJeTaime_df)
+write.csv(ParisJeTaime_df, "ParisJeTaime.csv")
+```
+
+## Extract tweets for hashtags
+```{r}
+ParisJeTaimeHashtag <- searchTwitter("#parisjetaime exclude:retweets", n=100)
+ParisJeTaimeHashtag_df <- tbl_df(map_df(ParisJeTaimeHashtag, as.data.frame))
+write.csv(ParisJeTaimeHashtag_df, "ParisJeTaimeHashtag.csv")
+head(ParisJeTaimeHashtag_df)
+```
+
+
+
+
