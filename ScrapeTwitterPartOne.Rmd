@@ -39,10 +39,10 @@ library(ggplot2)
 
 ## Access keys and tokens
 ```{r}
-api_Key = "UpV34UlCER500Wt2L6moKzafQ"
-api_Secret = "dClASQhAk2JPl6vCa1Y84bcm38FF6Ol2vXrKnBA2jnaCUxHYRU"
-access_Token = "3289530502-HDTWQVZ5ygeBfkGge5uAF0ga9IFaH5eUjNlAVle"
-access_Token_Secret = "mib41B7t0Cot1ifOJDsAlwHtYZzZUNRpLyTC54UPsfnsO"
+api_Key = "Enter your api key"
+api_Secret = "Enter your secret api key"
+access_Token = "Enter your access token"
+access_Token_Secret = "Enter your secret access token"
 ```
 
 
@@ -53,7 +53,7 @@ setup_twitter_oauth(consumer_key = api_Key, consumer_secret = api_Secret,
 access_token = access_Token, access_secret = access_Token_Secret)
 ```
 
-## Extract user tweets
+## Extract user tweets, create df and csv
 ```{r}
 ParisJeTaime <- userTimeline("ParisJeTaime", n = 100)
 ParisJeTaime_df <- tbl_df(map_df(ParisJeTaime, as.data.frame))
@@ -61,7 +61,7 @@ head(ParisJeTaime_df)
 write.csv(ParisJeTaime_df, "ParisJeTaime.csv")
 ```
 
-## Extract tweets for hashtags
+## Extract tweets for hashtags, create df and csv
 ```{r}
 ParisJeTaimeHashtag <- searchTwitter("#parisjetaime exclude:retweets", n=100)
 ParisJeTaimeHashtag_df <- tbl_df(map_df(ParisJeTaimeHashtag, as.data.frame))
