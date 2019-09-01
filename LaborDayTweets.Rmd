@@ -39,10 +39,10 @@ library(ggplot2)
 
 ## Access keys and tokens
 ```{r}
-api_Key = "BMKvFp1mzdIFtSrKlblChehSM"
-api_Secret = "JcjmFti6CtAuVEX6bviDCB3ePhh2nwc3bKNN74Dpn94Rh2IShT"
-access_Token = "3289530502-DUT1DUnPujKES32HACgpoVwkiN8u2KrC5DC3PaR"
-access_Token_Secret = "xsa9WneQKEfugTKu39BNfgo44ApfGnfiuMNttBGCYPoqR"
+api_Key = "Insert your API key"
+api_Secret = "Insert your Secret API key"
+access_Token = "Insert your access token"
+access_Token_Secret = "Insert your secret access token"
 ```
 
 
@@ -99,12 +99,12 @@ word_frequency = sort(rowSums(m), decreasing=TRUE)
 LaborDayTweetsFrequency = data.frame(word=names(word_frequency), freq=word_frequency)
 ```
 
-# Create Word Cloud
+## Create Word Cloud
 ```{r}
 wordcloud(LaborDayTweetsFrequency$word, LaborDayTweetsFrequency$freq, random.order=FALSE, colors=brewer.pal(8, "Spectral"))
 ```
 
-# Save the word cloud in a PNG
+## Save the word cloud in a PNG
 ```{r}
 png("LaborDayTweetsWordCloud.png", width=12, height=8, units="in", res=300)
 wordcloud(dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(8, "Spectral"))
