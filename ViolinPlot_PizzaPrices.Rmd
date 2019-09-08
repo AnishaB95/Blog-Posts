@@ -1,0 +1,79 @@
+---
+title: "ViolinPlot_PizzaPrices"
+author: "Anisha BharathSingh"
+date: "9/7/2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load packages
+```{r}
+library(ggplot2)
+library(tidyverse)
+```
+
+## Import Data
+```{r}
+PizzaPrices <- read.csv("PizzaPrices.csv")
+head(PizzaPrices)
+nrow(PizzaPrices)
+```
+
+## Remove Rows with Missing Values
+```{r}
+PizzaPrices <- na.omit(PizzaPrices)
+head(PizzaPrices)
+nrow(PizzaPrices)
+```
+
+## New York Pizza Max Menu Prices
+```{r}
+NewYorkPizzaPrices <- filter(PizzaPrices, city == "New York")
+ggplot(NewYorkPizzaPrices, aes(x=city, y=menus.amountMax)) + geom_violin(trim=FALSE) + ggtitle("Violin Plot of Max Pizza Menus Prices in New York") + labs(x="City", y="Max Menu Price")
+```
+
+## Most Expensive Pizza New York
+```{r}
+ExpensivePizza <- NewYorkPizzaPrices %>%
+  arrange(desc(menus.amountMax))
+head(ExpensivePizza)
+```
+
+## New York Pizza Max Menu Prices minus outlier
+```{r}
+NewYorkPizzaPrices <- filter(NewYorkPizzaPrices,  menus.amountMax < 100)
+ggplot(NewYorkPizzaPrices, aes(x=city, y=menus.amountMax)) + geom_violin(trim=FALSE) + ggtitle("Violin Plot of Max Pizza Menus Prices in New York") + labs(x="City", y="Max Menu Price")
+```
+
+
+## Plot with mean + median points
+```{r}
+ggplot(NewYorkPizzaPrices, aes(x=city, y=menus.amountMax)) + geom_violin(trim=FALSE) + stat_summary(fun.y=mean, geom="point", size=2, color = "blue") + stat_summary(fun.y=median, geom="point", size=2, color = "red") + ggtitle("Violin Plot of Max Pizza Menus Prices in New York with Mean and Median Points") + labs(x="City", y="Max Menu Price")
+```
+
+## Plot with boxplot + color
+```{r}
+ggplot(NewYorkPizzaPrices, aes(x=city, y=menus.amountMax)) + geom_violin(trim=FALSE, fill="lightblue") + geom_boxplot(width=0.1) + ggtitle("Violin Plot of Max Pizza Menus Prices in New York with Box Plot") + labs(x="City", y="Max Menu Price")
+```
+
+
+## Dataframe for data from New York, Los Angeles and Chicago
+```{r}
+Cities <- filter(PizzaPrices, city == "New York" | city == "Los Angeles" | city == "Chicago", menus.amountMax < 100)
+head(Cities)
+```
+
+
+## Violin plot comparing cities + Boxplot + fill 
+```{r}
+ggplot(Cities, aes(x=city, y=menus.amountMax)) + geom_violin(trim=FALSE, fill="lightblue") + geom_boxplot(width=0.1) + ggtitle("Violin Plot of Max Pizza Menus Prices") + labs(x="City", y="Max Menu Price")
+```
+
+## Fill by category
+```{r}
+ggplot(Cities, aes(x=city, y=menus.amountMax, fill=city)) + geom_violin(trim=FALSE) + geom_boxplot(width=0.1) + ggtitle("Violin Plot of Max Pizza Menus Prices") + labs(x="City", y="Max Menu Price")
+```
+
