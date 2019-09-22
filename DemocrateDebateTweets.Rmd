@@ -1,0 +1,92 @@
+---
+title: "ScrapingTextfromTwitter"
+author: "Anisha BharathSingh"
+date: "9/18/2019"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install Packages
+```{r}
+#install.packages("stringr")
+#install.packages("twitteR")
+#install.packages("purrr")
+#install.packages("tidytext")
+#install.packages("dplyr")
+#install.packages("tidyr")
+#install.packages("lubridate")
+#install.packages("scales")
+#install.packages("broom")
+#install.packages("ggplot2")
+#install.packages("ROAuth")
+#install.packages("httr")
+```
+
+## Load packages
+```{r}
+library(stringr)
+library(twitteR)
+library(purrr)
+library(tidytext)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(scales)
+library(broom)
+library(ggplot2)
+library(ROAuth)
+library(httr)
+```
+
+## Access keys and tokens
+```{r}
+api_Key = "f2JshLu6lWOIpFZT8i040ssWr"
+api_Secret = "8xIhvOQC91xGYqw8r3TgHyxUQWjGVJb0FVNAVCWFEqpOHEd7Js"
+access_Token = "3289530502-fcmiDFtM4dpnyGWPNyEhtNZ7BOWMr9dj4Cqcwuv"
+access_Token_Secret = "ZSpJHBG92n7BNQGVLKuxWhVRxfmZ1GNgyzu8MNDs6eQ7Z"
+```
+
+
+## Setup R and Twitter API Connection
+```{r}
+options(httr_oauth_cache=TRUE)
+setup_twitter_oauth(consumer_key = api_Key, consumer_secret = api_Secret, access_token = access_Token, access_secret = access_Token_Secret)
+```
+
+
+## Extract tweets for hashtags between certain days
+```{r}
+Tweets <- searchTwitter("#democraticdebate, exclude:retweets", n=5000, since ='2019-09-11', until= '2019-09-13')
+```
+
+
+## Turn tweets into data frame
+```{r}
+Tweets_df <- tbl_df(map_df(Tweets, as.data.frame))
+#write.csv(Tweets_df, "DemDebateTweets.csv")
+head(Tweets_df)
+```
+
+
+## Tweets from a Location
+```{r}
+TweetsNYC <- searchTwitter("#democraticdebate exclude:retweets", n=313, since ='2019-09-11', until= '2019-09-13', geocode = "40.730610,-73.935242,5mi")
+```
+
+## Turn tweets into data frame
+```{r}
+TweetsNYC_df <- tbl_df(map_df(TweetsNYC, as.data.frame))
+#write.csv(TweetsNYC_df, "DemDebateTweetsNYC.csv")
+head(TweetsNYC_df)
+```
+
+
+
+
+
+
+
