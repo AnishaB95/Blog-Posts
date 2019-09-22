@@ -44,10 +44,10 @@ library(httr)
 
 ## Access keys and tokens
 ```{r}
-api_Key = "f2JshLu6lWOIpFZT8i040ssWr"
-api_Secret = "8xIhvOQC91xGYqw8r3TgHyxUQWjGVJb0FVNAVCWFEqpOHEd7Js"
-access_Token = "3289530502-fcmiDFtM4dpnyGWPNyEhtNZ7BOWMr9dj4Cqcwuv"
-access_Token_Secret = "ZSpJHBG92n7BNQGVLKuxWhVRxfmZ1GNgyzu8MNDs6eQ7Z"
+api_Key = "INSERT"
+api_Secret = "INSERT"
+access_Token = "INSERT"
+access_Token_Secret = "INSERT"
 ```
 
 
