@@ -201,7 +201,7 @@ AverageFavorite
 
 ## Plot of average favorites for candidates tweets
 ```{r}
-ggplot(AverageFavorite, aes(x = screenName, y = AverageFavorites)) + geom_bar(stat = 'identity', fill = "lightblue") + ggtitle("Average Number of Favorites for Candidate's Tweets") + labs(y = "Count", x = "Candidate") +  scale_x_discrete(labels=c("Andrew Yang", "Bernie Sanders", "Elizabeth Warren", "Joe Biden", "Kamala Harris", "Pete Buttigieg"))
+ggplot(AverageFavorite, aes(x = screenName, y = AverageFavorites)) + geom_bar(stat = 'identity', fill = "lightblue") + ggtitle("Average Number of Favorites for Candidate's Tweets") + labs(y = "Average Number of Favorites", x = "Candidate") +  scale_x_discrete(labels=c("Andrew Yang", "Bernie Sanders", "Elizabeth Warren", "Joe Biden", "Kamala Harris", "Pete Buttigieg"))
 ```
 
 
@@ -221,5 +221,5 @@ AverageNumberOfRetweets
 
 ## Plot of average number of retweets for candidates tweets
 ```{r}
-ggplot(AverageNumberOfRetweets, aes(x = screenName, y = AverageRetweets)) + geom_bar(stat = 'identity', fill = "lightblue") + ggtitle("Average Number of Retweets of Candidate's Tweets") + labs(y = "Count", x = "Candidate") +  scale_x_discrete(labels=c("Andrew Yang", "Bernie Sanders", "Elizabeth Warren", "Joe Biden", "Kamala Harris", "Pete Buttigieg"))
+ggplot(AverageNumberOfRetweets, aes(x = screenName, y = AverageRetweets)) + geom_bar(stat = 'identity', fill = "lightblue") + ggtitle("Average Number of Retweets of Candidate's Tweets") + labs(y = "Average Number of Retweets", x = "Candidate") +  scale_x_discrete(labels=c("Andrew Yang", "Bernie Sanders", "Elizabeth Warren", "Joe Biden", "Kamala Harris", "Pete Buttigieg"))
 ```
