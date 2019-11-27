@@ -39,10 +39,10 @@ library(ggplot2)
 
 ## Access keys and tokens
 ```{r}
-api_Key = "8zHPB9KiCoJ5u6IOcC9pzJTPw"
-api_Secret = "s1HhLal8cjTwgWegC2ntVefMeW9aStZIhJl6DzBNgW4CxNBHxC"
-access_Token = "3289530502-qghkkJiB67O4AUtuHdwutsIiNqdf7q8SVLDDLK6"
-access_Token_Secret = "qmOBSgYiiusZlVkUg7W7INsW2Kea2oEmQmz1iOoXHCRC8"
+api_Key = "Insert Here"
+api_Secret = "Insert Here"
+access_Token = "Insert Here"
+access_Token_Secret = "Insert Here"
 ```
 
 
