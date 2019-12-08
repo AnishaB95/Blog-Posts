@@ -5,6 +5,8 @@ date: "12/7/2019"
 output: html_document
 ---
 
+#Keyword Clustering following Remi Bacha: https://github.com/remibacha/kwClustersR
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
