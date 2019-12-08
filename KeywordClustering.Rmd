@@ -1,0 +1,73 @@
+---
+title: "KeywordClustering"
+author: "Anisha BharathSingh"
+date: "12/7/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r install packages}
+# Install packages from Remi's Github
+devtools::install_github("remibacha/kwClustersR")
+```
+
+
+```{r load packages}
+# Load packages into RStudio
+library(kwClustersR)
+library(readxl)
+library(stringdist)
+```
+
+```{r read file}
+# Read in excel file
+df <-  read_excel("keywordList.xls", sheet = 1, col_names = TRUE, na = "", skip=0)
+```
+
+```{r keyword clustering}
+# Define the number of clusters you want to create
+kclusters = round(0.5 * length(unique(df$Keyword)))
+
+# Compute the distance between words
+uniqueThema <- unique(as.character(df$Keyword))
+distancemodels <- stringdistmatrix(uniqueThema,uniqueThema,method = "jw")
+
+```
+
+```{r keyword cluster dendrogram}
+# Create plot of keyword clusters in a dendrogram
+rownames(distancemodels) <- uniqueThema
+hc <- hclust(as.dist(distancemodels))
+par(mar = rep(2, 4)) #This line is used to avoid the error "figure margins too large"
+plot(hc, cex = 0.4)
+```
+
+```{r keyword cluster file}
+# View your cluster file
+View(dfClust)
+```
+
+
+```{r keyword cluster frequency}
+# Create bar graph displaying the number of keywords in each cluster
+dfClust <- data.frame(uniqueThema, cutree(hc, k=kclusters))
+names(dfClust) <- c('Thema','cluster')
+plot(table(dfClust$cluster))
+```
+
+
+```{r kwClustersR function}
+# Call the kwClustersR function with arguments df name and cluster ratio
+kwClustersR(df,0.5)
+```
+
+
+
+
+
+
+
