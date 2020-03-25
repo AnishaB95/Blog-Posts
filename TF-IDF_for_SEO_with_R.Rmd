@@ -1,0 +1,180 @@
+---
+title: "TF-IDF for SEO with R"
+author: "Anisha BharathSingh"
+date: "3/23/2020"
+output: pdf_document
+---
+
+#Setup 
+```{r setup, include=FALSE}
+#install.packages('rvest')
+#install.packages('tm')
+#install.packages('corpus')
+#install.packages('ggplot2')
+#install.packages('tidytext')
+#install.packages('textdata')
+#install.packages('dplyr')
+#install.packages('tidyverse')
+```
+
+```{r}
+library(rvest)
+library(tm)
+library(corpus)
+library(ggplot2)
+library(tidytext)
+library(textdata)
+library(dplyr)
+library(tidyverse)
+```
+
+## Step 1: Scrape Text from Webpages
+
+#Import Text from Journey to Data Scientist 
+```{r}
+#Create the URL variable for desired webpage to be scraped
+url <- 'https://journeytodatascientist.blog/2020/02/02/data-science-pioneers-conquering-the-next-frontier/'
+
+#Reading the webpage HTML code and specific nodes (information) wanted from the webpage
+webpage <- read_html(url)
+jtds <- html_nodes(webpage,'.entry-content')
+
+#Converting nodes to text
+jtds <- html_text(jtds)
+```
+
+#Import Text from Dataiku
+```{r}
+#Create the URL variable for desired webpage to be scraped
+url <- 'https://pages.dataiku.com/data-science-documentary'
+
+#Reading the webpage HTML code and specific nodes (information) wanted from the webpage
+webpage <- read_html(url)
+di <- html_nodes(webpage,'.body-container .row-number-2 .row-fluid')
+
+#Converting nodes to text
+di <- html_text(di)
+```
+
+
+#Import Text from Optimal BI
+```{r}
+#Create the URL variable for desired webpage to be scraped
+url <- 'https://optimalbi.com/blog/2019/11/14/data-science-pioneers-movie/'
+
+#Reading the webpage HTML code and specific nodes (information) wanted from the webpage
+webpage <- read_html(url)
+ob <- html_nodes(webpage,'p:nth-child(7) , p:nth-child(6) , .entry-content > p:nth-child(5) , .aligncenter~ p:nth-child(4) , .aligncenter+ p , #left-area p:nth-child(1)')
+
+#Converting nodes to text
+ob <- html_text(ob)
+```
+
+
+
+## Step 2: Create and Clean Corpus
+
+# Create Corpus with 'Corpus' Package
+```{r}
+jtds <- as_corpus_frame(jtds)
+di <- as_corpus_frame(di)
+ob <- as_corpus_frame(ob)
+
+```
+
+# Clean & Prepare Corpii
+```{r}
+# Remove punctuation from corpus:
+jtds <- term_stats(jtds, drop_punct = TRUE)
+di <- term_stats(di, drop_punct = TRUE)
+ob <- term_stats(ob, drop_punct = TRUE)
+
+# Drop Column 3 
+jtds <- jtds[,1:2]
+di <- di[,1:2]
+ob <- ob[,1:2]
+
+# Rename column names
+colnames(jtds) <- c("word", "count")
+colnames(di) <- c("word", "count")
+colnames(ob) <- c("word", "count")
+
+```
+
+## Step 3: Find "TF"
+
+# add source, total count and then TF to each data frame 
+```{r}
+jtds <- jtds %>%
+  mutate(source = "Journey to Data Scientist") %>%
+  mutate(total_words = sum(jtds$count)) %>%
+  mutate("TF" = count / total_words) 
+
+
+di <- di %>%
+  mutate(source = "Dataiku") %>%
+  mutate(total_words = sum(di$count)) %>%
+  mutate("TF" = count / total_words) 
+
+
+ob <- ob %>%
+  mutate(source = "Optimal BI") %>%
+  mutate(total_words = sum(ob$count)) %>%
+  mutate("TF" = count / total_words) 
+
+```
+
+
+## Step 4: Find "IDF" and "TF-IDF"
+#combine data frames
+```{r}
+combined_dataframe <- rbind(jtds, di, ob)
+combined_dataframe
+```
+
+#Remember:
+#IDF = log(Total Number of Documents / number of documents with term x in it) 
+#TF-IDF = TF * IDF
+
+#find tf-idf
+```{r}
+tf_idf <- combined_dataframe %>% 
+  add_count(word) %>%
+  group_by(source) %>%
+  mutate("IDF" = 1 + log(3 / n)) %>%
+  mutate("TF_IDF" = TF * IDF) 
+```
+
+
+## Step 5: Analysis
+#bar chart showing tf-idf for target keywords in comparison to top performing blogs
+```{r}
+
+words_target_keywords <- filter(tf_idf, word == "data" | word == "science" | word == "pioneers" | word == "documentary" | word == "artificial" | word == "intelligence" | word == "ai" | word == "machine" | word == "learning" | word == "scientists" | word == "dataiku" | word == "screening")
+
+```
+```{r}
+ggplot(data = words_target_keywords, aes(x = reorder(word, -TF_IDF), y = TF_IDF, fill = source)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  ggtitle("Comparison of TF-IDF for Target Keywords among Competitors") + 
+  labs(x = "Keyword", y = "TF IDF Score") + 
+  theme(axis.text.x  = element_text(angle=60, vjust=0.5, size=8)) + 
+  theme(axis.title.y = element_text(size=10))
+```
+
+
+
+
+#bar chart showing keywords with highest tf-idf across blogs
+```{r}
+tf_idf_arrange <- arrange(tf_idf, desc(TF_IDF))
+tf_idf_10 <- tf_idf_arrange[1:50, ]
+
+ggplot(tf_idf_10, aes(x = reorder(word, -TF_IDF), y = TF_IDF, fill = source)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  ggtitle("Keywords with the Highest TF-IDF Scores among Competitors") + 
+  labs(x = "Keyword", y = "TF-IDF Score") + 
+  theme(axis.text.x  = element_text(angle=60, vjust=0.5, size=8)) + 
+  theme(axis.title.y = element_text(size=10))
+```
+
