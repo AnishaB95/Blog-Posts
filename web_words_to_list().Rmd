@@ -1,0 +1,41 @@
+---
+title: "web_words_to_list Function"
+author: "Anisha BharathSingh"
+date: "4/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Packages needed for functions within web_words_to_list()
+```{r, load packages}
+library(rvest)
+library(corpus)
+```
+
+## Creating web_words_to_list()
+# the URL argument is simply the URL of the webpage that you want to scrape from
+# the nodes argument should include the HTML nodes associated with the text that you want to scrape from the URL. You can find the HTML nodes of any webpages using the Chrome extension: 'SelectorGadget'- https://selectorgadget.com/
+```{r, web_words_to_list function}
+web_words_to_list <- function(url, nodes) {
+  url <- url
+  webpage <- read_html(url)
+  text <- html_nodes(webpage, nodes)
+  text <- html_text(text)
+  data <- as_corpus_frame(text)
+  words <- term_stats(data, drop_punct = TRUE, drop = stopwords_en)
+  words <- words[,1:2]
+  colnames(words) <- c("word", "count")
+  print(words)
+}
+```
+
+
+## Example of web_words_to_list() in action
+```{r}
+web_words_to_list(url = 'https://science.nasa.gov/science-news/news-articles/keeping-an-eye-on-earth', nodes = 'p:nth-child(10) , p:nth-child(9) , p:nth-child(8) , p:nth-child(7) , p:nth-child(6) , p:nth-child(5) , p:nth-child(4) , p:nth-child(1)')
+```
+
+
