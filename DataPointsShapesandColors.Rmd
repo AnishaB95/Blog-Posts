@@ -1,0 +1,96 @@
+---
+title: "ggplot2 geom_point() shapes + colors"
+author: "Anisha BharathSingh"
+date: "5/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#load packages
+```{r}
+library("ggplot2")
+library("dplyr")
+```
+
+#import data
+```{r import}
+worldHappiness <- read.csv("2015.csv")
+```
+
+# omit incomplete observations if any
+```{r}
+na.omit(worldHappiness)
+```
+
+#examine column names
+```{r pressure, echo=FALSE}
+colnames(worldHappiness)
+```
+
+
+#filter for specific regions
+```{r}
+happinessRegions <- filter(worldHappiness, Region == "Middle East and Northern Africa" | Region == "Central and Eastern Europe" | Region == "Western Europe" | Region == "Sub-Saharan Africa")
+
+```
+
+
+# Scatterplot with geom_point()
+```{r}
+ggplot(happinessRegions, aes(Freedom, Happiness.Score)) +
+  geom_point() +
+  theme_minimal() +
+  ggtitle("Freedom vs. Happiness (2015)") + 
+  labs(x = "Freedom", y = "Happiness Score")
+```
+
+# Scatterplot with geom_point()
+# color by Region
+```{r}
+ggplot(happinessRegions, aes(Freedom, Happiness.Score)) +
+  geom_point(aes(color = Region)) +
+  theme_minimal() +
+  ggtitle("Freedom vs. Happiness (2015)") + 
+  labs(x = "Freedom", y = "Happiness Score")
+```
+
+# Scatterplot with geom_point() 
+# color and shape by Region
+```{r}
+ggplot(happinessRegions, aes(Freedom, Happiness.Score)) +
+  geom_point(aes(color = Region, shape = Region)) +
+  theme_minimal() +
+  ggtitle("Freedom vs. Happiness (2015)") + 
+  labs(x = "Freedom", y = "Happiness Score")
+```
+
+# # Scatterplot with geom_point() 
+# color and shape by Region
+# set individual shapes
+```{r}
+ggplot(happinessRegions, aes(Freedom, Happiness.Score)) +
+  geom_point(aes(shape = Region, color = Region)) +
+  theme_minimal() +
+  ggtitle("Freedom vs. Happiness (2015)") + 
+  labs(x = "Freedom", y = "Happiness Score") +
+  scale_shape_manual(values = c(5, 7, 10, 13))
+```
+
+# # Scatterplot with geom_point() 
+# color and shape by Region
+# set individual shapes + colors
+```{r}
+ggplot(happinessRegions, aes(Freedom, Happiness.Score)) +
+  geom_point(aes(shape = Region, color = Region)) +
+  theme_minimal() +
+  ggtitle("Freedom vs. Happiness (2015)") + 
+  labs(x = "Freedom", y = "Happiness Score") +
+  scale_shape_manual(values = c(5, 7, 10, 13)) +
+  scale_color_manual(values = c("#C97B84", "#A5D8FF", "#9CC4B2", "#9532a8"))
+```
+
+
+
