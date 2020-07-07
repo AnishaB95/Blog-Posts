@@ -1,0 +1,128 @@
+---
+title: "A/B Testing"
+author: "Anisha BharathSingh"
+date: "6/26/2020"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#install.packages("readxl")
+library(readxl)
+#install.packages("ggplot2")
+library(ggplot2)
+install.packages("tidyverse", type = "binary")
+library(tidyverse)
+#install.packages("lubridate")
+library(lubridate)
+#install.packages("WebPower")
+library(WebPower)
+#install.packages("broom")
+library(broom)
+```
+
+#Read in baseline data + view column names
+```{r}
+baselineData <- read_excel("BaselineDataset.xlsx")
+head(baselineData)
+```
+
+#Coerce to Date variable from POSIXct to Date with as.Date from the lubridate package
+```{r}
+baselineData$Date <- as.Date(baselineData$Date)
+head(baselineData)
+```
+
+#take a look at number of conversions throughout the year
+```{r}
+baselineDataWeek <- baselineData %>%
+  group_by(week(Date)) %>%
+  summarize(conversion = mean(TotalConversions))
+```
+
+# Build plot in ggplot to look at average converions by week
+```{r}
+ggplot(baselineDataWeek, aes(x = `week(Date)`,
+                           y = `conversion` )) +
+  geom_point() +
+  geom_line() +
+  scale_y_continuous(limits = c(0, 30)) +
+  ggtitle("Average Conversions for 'the KeepKool' Product Page by Week (2019)") +
+  labs(y = "Number of Conversions", x = "Week Number")
+```
+
+#Get data for May
+```{r}
+baselineDataMay <- subset(baselineData, Date > "2019-05-01" & Date < "2019-05-31")
+```
+
+# Power analysis 
+# first get averages for wp.poisson function
+```{r}  
+baselineDataMayAverages <- baselineDataMay %>%
+  summarize(conversionMonthControl = mean(ConversionsControl), conversionMonthAlternate = mean(ConversionsAlternate))
+baselineDataMayAverages
+```
+
+#percent increase
+```{r}
+(8.689655 - 4.758621)/4.758621
+```
+
+#wp.poisson for sample size
+```{r}
+wp.poisson(n = NULL, 
+           exp0 = 4.758621, 
+           exp1 = 0.8260868, 
+           alpha = 0.05,
+           power = 0.8, 
+           alternative = "two.sided",
+           family = "Poisson", 
+           parameter = 1)
+```
+#65 points needed per condition
+
+
+#load experiment data
+```{r}
+ExperimentData <- read_excel("ExperimentData.xlsx")
+ExperimentData$Date <- as.Date(ExperimentData$Date)
+head(ExperimentData)
+```
+
+#put conditions in own column
+```{r}
+experimentData <- gather(ExperimentData, key = "Condition", value = "Conversions",
+       Control, Experiment)
+```
+
+#find means and variances (will need variance later)
+```{r}
+experimentData %>%
+  group_by(Condition) %>%
+  summarize(conversionMean = mean(Conversions), conversionVar = var(Conversions))
+```
+
+#plot to see difference between control and experiment
+```{r}
+ggplot(experimentData, aes(x = Date, y = Conversions, group = Condition, col = Condition)) +
+  geom_point() +
+  geom_line() +
+  ggtitle("Control vs. Experiment Webpage Conversions (May-July 2020)") +
+  labs(y = "Number of Conversions")
+```
+
+#use glm regression 
+#use poisson because its discrete data
+#use quasi poisson because means do not equal variance
+```{r}
+glm(Conversions ~ Condition, family = "quasipoisson", data = experimentData) %>%
+  tidy()
+```
+
+
+
+
