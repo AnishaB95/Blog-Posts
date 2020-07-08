@@ -25,6 +25,7 @@ library(broom)
 ```
 
 #Read in baseline data + view column names
+## file named "A/BTestingBaselineDataset.xlsx" on github 
 ```{r}
 baselineData <- read_excel("BaselineDataset.xlsx")
 head(baselineData)
@@ -87,6 +88,7 @@ wp.poisson(n = NULL,
 
 
 #load experiment data
+## file named "A/BTestingExeperimentData.xlsx" on github 
 ```{r}
 ExperimentData <- read_excel("ExperimentData.xlsx")
 ExperimentData$Date <- as.Date(ExperimentData$Date)
