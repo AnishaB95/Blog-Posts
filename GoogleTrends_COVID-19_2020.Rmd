@@ -1,0 +1,71 @@
+---
+title: "Google Trends COVID-19 Data 2020"
+author: "Anisha BharathSingh"
+date: "12/30/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Install packages
+```{r install packages}
+install.packages("gtrendsR")
+install.packages("magrittr")
+install.packages("dplyr")
+```
+
+#Load packages
+```{r load packages}
+library(gtrendsR)
+library(magrittr)
+library(dplyr)
+```
+#Retrieve data for "covid" and "coronavirus" with gtrends()
+```{r}
+res <- gtrends(c("covid", "coronavirus"), geo = "US", time = "2020-01-01 2020-12-29")
+```
+
+#Plot search interest over time for "covid" vs "coronavirus"
+```{r}
+plot(res)
+```
+
+#Find top 5 related queries for "coronavirus" and "covid"
+```{r}
+rel <- res$related_queries %>%
+  group_by(keyword) %>%
+  filter(related_queries == "top") %>% #remove queries in breakouts
+  mutate(search_interest = as.numeric(subject)) %>% #convert search interest to numeric
+  top_n(5,search_interest) %>% #keep top 5 by search interest only
+  arrange(desc(search_interest)) #arrange in descending order
+
+#reorder columns
+rel <- rel[ ,c("search_interest", "related_queries", "value", "geo", "keyword", "category", "subject")]
+
+#print update data table
+print(rel)
+```
+
+#Retrieve and plot data for "coronavirus" and related queries with gtrends()
+```{r}
+res_coronavirus <- gtrends(c("coronavirus", "coronavirus cases", "coronavirus update", "us coronavirus"), geo = "US", time = "2020-01-01 2020-12-29")
+plot(res_coronavirus)
+```
+
+
+#Retrieve and plot data for "coronavirus" and related queries with gtrends()
+```{r}
+res_covid <- gtrends(c("covid", "covid 19", "covid cases", "covid testing"), geo = "US", time = "2020-01-01 2020-12-29")
+plot(res_covid)
+```
+
+#Retrieve and plot data for "coronavirus vaccine" vs "covid vaccine" with gtrends()
+```{r}
+res_vaccine <- gtrends(c("covid vaccine", "coronavirus vaccine"), geo = "US", time = "2020-01-01 2020-12-29")
+plot(res_vaccine)
+```
+
+
+
