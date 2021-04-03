@@ -1,0 +1,99 @@
+---
+title: "Data Art"
+author: "Anisha BharathSingh"
+---
+
+```{r packages}
+library(imager)    # image loading and processing
+library(dplyr)     # data manipulation
+library(ggplot2)   # data visualization
+library(tidyr)     # data wrangling
+library(ggvoronoi) # visualization
+```
+
+```{r setup}
+# Load an image into R
+img <- load.image(file = "park-guell.jpg")
+
+# Print the image object 
+print(img)
+```
+
+```{r plot image}
+# plot the image
+plot(img)
+```
+
+```{r}
+# save the image as a data frame
+img_df <- as.data.frame(img)
+
+```
+
+
+```{r}
+# Add labels to the colors
+img_df <- img_df %>% 
+  mutate(channel = case_when(
+    cc == 1 ~ "Red",
+    cc == 2 ~ "Green", 
+    cc == 3 ~ "Blue"
+  ))
+
+# Alter the data frame so that each row is a point
+img_wide <- img_df %>%
+  select(x, y, channel, value) %>%
+  spread(key = channel, value = value) %>%
+  mutate(
+    color = rgb(Red, Green, Blue)
+  )
+
+```
+
+
+
+```{r}
+# Plot points at each sampled location
+ggplot(img_wide) +
+  geom_point(mapping = aes(x = x, y = y, color = color)) +
+  scale_color_identity() # use the actual value in the `color` column
+
+```
+
+
+```{r}
+ggplot(img_wide) +
+  geom_point(mapping = aes(x = x, y = y, color = color)) +
+  scale_color_identity() + # use the actual value in the `color` column
+  scale_y_reverse() + # Turn image right side up
+  theme_void() # Remove axes and background
+
+```
+
+
+```{r}
+# Take a sample of rows from the data frame
+sample_size <- 5000
+img_sample <- img_wide[sample(nrow(img_wide), sample_size), ]
+
+```
+
+
+
+```{r}
+# Create a Voronoi Diagram of the sampled points
+barcelona <- ggplot(img_sample) +
+  geom_voronoi(mapping = aes(x = x, y = y, fill = color)) +
+  scale_fill_identity() +
+  scale_y_reverse() +
+  theme_void()
+
+# Show resulting Voronoi Diagram
+barcelona
+```
+
+```{r}
+# Save image as a file
+ggsave("barcelona5000.png", width = 7, height = 5, units = "in")
+```
+
