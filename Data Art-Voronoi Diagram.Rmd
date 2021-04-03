@@ -13,7 +13,7 @@ library(ggvoronoi) # visualization
 
 ```{r setup}
 # Load an image into R
-img <- load.image(file = "park-guell.jpg")
+img <- load.image(file = "file-name.jpg")
 
 # Print the image object 
 print(img)
@@ -29,7 +29,6 @@ plot(img)
 img_df <- as.data.frame(img)
 
 ```
-
 
 ```{r}
 # Add labels to the colors
@@ -50,8 +49,6 @@ img_wide <- img_df %>%
 
 ```
 
-
-
 ```{r}
 # Plot points at each sampled location
 ggplot(img_wide) +
@@ -59,7 +56,6 @@ ggplot(img_wide) +
   scale_color_identity() # use the actual value in the `color` column
 
 ```
-
 
 ```{r}
 ggplot(img_wide) +
@@ -70,30 +66,27 @@ ggplot(img_wide) +
 
 ```
 
-
 ```{r}
 # Take a sample of rows from the data frame
-sample_size <- 5000
+sample_size <- [ADD NUMBER FOR YOUR SAMPLE SIZE]
 img_sample <- img_wide[sample(nrow(img_wide), sample_size), ]
 
 ```
 
-
-
 ```{r}
 # Create a Voronoi Diagram of the sampled points
-barcelona <- ggplot(img_sample) +
+voronoi_diagram <- ggplot(img_sample) +
   geom_voronoi(mapping = aes(x = x, y = y, fill = color)) +
   scale_fill_identity() +
   scale_y_reverse() +
   theme_void()
 
 # Show resulting Voronoi Diagram
-barcelona
+voronoi_diagram
 ```
 
 ```{r}
 # Save image as a file
-ggsave("barcelona5000.png", width = 7, height = 5, units = "in")
+ggsave("voronoi_diagram.png", width = 7, height = 5, units = "in")
 ```
 
